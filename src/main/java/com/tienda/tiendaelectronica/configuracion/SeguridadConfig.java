@@ -5,6 +5,7 @@ import com.tienda.tiendaelectronica.repositorio.UsuarioRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,21 +35,31 @@ public class SeguridadConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .sessionManagement(sess ->
-                    sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // LOGIN / REGISTRO
+                // ===== ENDPOINTS PÚBLICOS =====
+                .requestMatchers("/", "/error").permitAll()
+
+                // login / registro
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/usuarios/buscar").permitAll()
 
-                // PANEL ADMIN / INVENTARIO (solo ADMIN o REPONEDOR)
+                // productos y categorías visibles en la tienda (sin login)
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/productos/activos",
+                    "/api/categorias/**"
+                ).permitAll()
+
+                // ===== ZONA ADMIN / REPONEDOR =====
                 .requestMatchers("/api/admin/**")
                     .hasAnyAuthority("ROLE_ADMIN", "ROLE_REPONEDOR")
 
-                // CARRITO y PEDIDOS -> cualquier usuario autenticado
+                // carrito y pedidos -> cualquier usuario autenticado
                 .requestMatchers("/api/carrito/**", "/api/pedidos/**")
                     .authenticated()
 
-                // TODO LO DEMÁS: autenticado
+                // todo lo demás requiere estar autenticado
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFiltroAutenticacion, UsernamePasswordAuthenticationFilter.class)
