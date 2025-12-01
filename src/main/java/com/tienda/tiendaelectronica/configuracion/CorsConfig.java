@@ -13,13 +13,31 @@ public class CorsConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        // === ORIGENES PERMITIDOS ===
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",               // Angular local
+                "https://*.vercel.app",               // cualquiera de Vercel
+                "https://electronica-franko.vercel.app" // tu dominio exacto (si ya lo sabes)
+        ));
+
+        // === MÉTODOS PERMITIDOS ===
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        // === HEADERS PERMITIDOS ===
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Cache-Control",
+                "X-Requested-With"
+        ));
+
+        // Permitir envío de cookies / headers Authorization
         config.setAllowCredentials(true);
 
+        // Aplicar CORS a todos los endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
