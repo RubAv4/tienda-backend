@@ -19,8 +19,7 @@ public class CorsConfig {
         // === ORIGENES PERMITIDOS ===
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",               // Angular local
-                "https://*.vercel.app",               // cualquiera de Vercel
-                "https://electronica-franko.vercel.app" // tu dominio exacto (si ya lo sabes)
+                "https://*.vercel.app"              // cualquiera de Vercel
         ));
 
         // === MÉTODOS PERMITIDOS ===
