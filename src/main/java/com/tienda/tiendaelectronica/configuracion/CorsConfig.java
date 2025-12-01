@@ -1,3 +1,4 @@
+/* src/main/java/com/tienda/tiendaelectronica/configuracion/CorsConfig.java */
 package com.tienda.tiendaelectronica.configuracion;
 
 import org.springframework.context.annotation.Bean;
@@ -13,33 +14,28 @@ public class CorsConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration config = new CorsConfiguration();
 
-        // === ORIGENES PERMITIDOS ===
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200",               // Angular local
-                "https://tienda-frontend-nine.vercel.app/"// enlace vercel
+        // 🌐 Orígenes permitidos
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:4200",    // desarrollo Angular
+                "https://*.vercel.app"      // cualquier dominio de Vercel
         ));
 
-        // === MÉTODOS PERMITIDOS ===
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        // Métodos permitidos
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-        // === HEADERS PERMITIDOS ===
-        config.setAllowedHeaders(List.of(
-                "Authorization",
-                "Content-Type",
-                "Cache-Control",
-                "X-Requested-With"
-        ));
+        // Cabeceras permitidas
+        config.setAllowedHeaders(List.of("*"));
 
-        // Permitir envío de cookies / headers Authorization
+        // Cabeceras que el front puede leer
+        config.setExposedHeaders(List.of("Authorization"));
+
+        // Para permitir cookies / auth, etc.
         config.setAllowCredentials(true);
 
-        // Aplicar CORS a todos los endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 }
