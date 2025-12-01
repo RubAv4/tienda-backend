@@ -19,7 +19,7 @@ public class CorsConfig {
         // === ORIGENES PERMITIDOS ===
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",               // Angular local
-                "https://*.vercel.app"              // cualquiera de Vercel
+                "https://tienda-frontend-nine.vercel.app/"// enlace vercel
         ));
 
         // === MÉTODOS PERMITIDOS ===
